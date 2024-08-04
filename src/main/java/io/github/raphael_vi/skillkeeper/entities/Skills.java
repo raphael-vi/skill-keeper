@@ -4,14 +4,18 @@ import jakarta.persistence.*;
 import jdk.jfr.Label;
 
 @Entity
-@Table
+@Table(name = "skills")
 public class Skills {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
 
-    public Integer getId() {
+    @ManyToOne
+    @JoinColumn(name = "field_id", nullable = false)
+    private Field field;
+
+    public int getId() {
         return id;
     }
 
@@ -27,4 +31,11 @@ public class Skills {
         this.name = name;
     }
 
+    public Field getField(){
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
 }
