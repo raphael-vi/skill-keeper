@@ -1,6 +1,7 @@
 package io.github.raphael_vi.skillkeeper.controllers;
 
-import io.github.raphael_vi.skillkeeper.entities.Skills;
+import io.github.raphael_vi.skillkeeper.entities.Skill;
+import io.github.raphael_vi.skillkeeper.repositories.FieldsRepository;
 import io.github.raphael_vi.skillkeeper.repositories.SkillsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,24 +14,29 @@ import java.util.List;
 public class SkillController {
     @Autowired
     private SkillsRepository skillsRepository;
+    @Autowired
+    private FieldsRepository fieldsRepository;
 
-    @PostMapping(path="/add")
-    public ResponseEntity<String> addNewSkill (@RequestParam(value = "name", required = false) String name){
-        if(name == null || name.trim().isEmpty()){
-            return ResponseEntity.badRequest().body("Name parameter is null or empty" + name);
+    @PostMapping
+    public ResponseEntity<String> addNewSkill(@PathVariable Integer fieldId, @RequestParam String name) {
+        return fieldsRepository.findById(fieldId).map(field -> {
+            Skill skill = new Skill();
+            skill.setName(name);
+            skill.setField(field); // Assuming a Skill has a field property
+            skillsRepository.save(skill);
+            return ResponseEntity.ok("Skill added to field successfully");
+        }).orElse(ResponseEntity.notFound().build());
+    }
 
+    @GetMapping
+    public ResponseEntity<List<Skill>> getAllSkills(@PathVariable Long fieldId) {
+        List<Skill> skills = skillsRepository.findByFieldId(fieldId);
+        if (skills.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
-        System.out.println("This is being called" + name);
-        Skills skill = new Skills();
-        skill.setName(name);
-        skillsRepository.save(skill);
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(skills);
     }
 
-    @GetMapping(path="/all")
-    public List<Skills> getAllSkills(){
-        return (List<Skills>) skillsRepository.findAll();
-    }
 
 
 }

@@ -1,9 +1,11 @@
 package io.github.raphael_vi.skillkeeper.repositories;
 
+import io.github.raphael_vi.skillkeeper.entities.Skill;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import io.github.raphael_vi.skillkeeper.entities.Skills;
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
 
-public interface SkillsRepository extends CrudRepository<Skills, Integer> {
-
+public interface SkillsRepository extends JpaRepository<Skill, Integer> {
+    List<Skill> findByFieldId(Long fieldId); // Find all skills by field ID
+    List<Skill> findByFieldName(String fieldName);
 }

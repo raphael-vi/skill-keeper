@@ -1,17 +1,16 @@
 package io.github.raphael_vi.skillkeeper.entities;
 
 import jakarta.persistence.*;
-import jdk.jfr.Label;
 
 @Entity
 @Table(name = "skills")
-public class Skills {
+public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id", nullable = false)
     private Field field;
 
@@ -38,4 +37,5 @@ public class Skills {
     public void setField(Field field) {
         this.field = field;
     }
+
 }
