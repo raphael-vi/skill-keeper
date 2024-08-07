@@ -17,6 +17,7 @@ public class SkillController {
     @Autowired
     private FieldsRepository fieldsRepository;
 
+
     @PostMapping
     public ResponseEntity<String> addNewSkill(@PathVariable Integer fieldId, @RequestParam String name) {
         return fieldsRepository.findById(fieldId).map(field -> {
@@ -28,8 +29,10 @@ public class SkillController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+
+
     @GetMapping
-    public ResponseEntity<List<Skill>> getAllSkills(@PathVariable Long fieldId) {
+    public ResponseEntity<List<Skill>> getAllSkills(@PathVariable Integer fieldId) {
         List<Skill> skills = skillsRepository.findByFieldId(fieldId);
         if (skills.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -37,6 +40,26 @@ public class SkillController {
         return ResponseEntity.ok(skills);
     }
 
+    @PatchMapping("/{skillId}")
+    public ResponseEntity<Skill> updateSkill(@PathVariable Integer fieldId, @PathVariable Integer skillId, @RequestBody Skill skillUpdates) {
+        if (!fieldsRepository.existsById(fieldId)){
+            return ResponseEntity.notFound().build();
+        }
+        return skillsRepository.findById(skillId).map(skill -> {
+            skill.setName(skillUpdates.getName()); //Note to self: this is Spring magic from @RequestBody
+            skillsRepository.save(skill);
+            return ResponseEntity.ok(skill);
+        }).orElse(ResponseEntity.notFound().build());
+    }
 
-
+    @DeleteMapping("/{skillId}")
+    public ResponseEntity<?> deleteSkill(@PathVariable Integer fieldId, @PathVariable Integer skillId){
+        if (!fieldsRepository.existsById(fieldId)){
+            return ResponseEntity.notFound().build();
+        }
+        return skillsRepository.findById(skillId).map(skill -> {
+            skillsRepository.delete(skill);
+            return ResponseEntity.ok().build();
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }

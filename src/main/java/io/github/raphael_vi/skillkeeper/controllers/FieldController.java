@@ -26,8 +26,34 @@ public class FieldController {
     }
 
     @GetMapping
-    public List<Field> getAllFields(){
-       return (List<Field>) fieldsRepository.findAll();
+    public ResponseEntity<List<Field>> getAllFields(){
+       List<Field> fields = (List<Field>) fieldsRepository.findAll();
+       if(fields.isEmpty()){
+           return ResponseEntity.notFound().build();
+       }
+       return ResponseEntity.ok(fields);
+
+    }
+    @PatchMapping("/{fieldId}")
+    public ResponseEntity<Field> updateField(@PathVariable Integer fieldId, @RequestBody Field fieldUpdates){
+        if(!fieldsRepository.existsById(fieldId)){
+            return  ResponseEntity.notFound().build();
+        }
+        return fieldsRepository.findById(fieldId).map(field -> {
+            field.setName(fieldUpdates.getName());
+            fieldsRepository.save(field);
+            return ResponseEntity.ok(field);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+    @DeleteMapping("/{fieldId}")
+    public ResponseEntity<?> deleteSkill(@PathVariable Integer fieldId){
+        if(!fieldsRepository.existsById(fieldId)){
+            return  ResponseEntity.notFound().build();
+        }
+        return fieldsRepository.findById(fieldId).map(field ->{
+            fieldsRepository.delete(field);
+            return ResponseEntity.ok().build();
+        }).orElse(ResponseEntity.notFound().build());
     }
 
 }
