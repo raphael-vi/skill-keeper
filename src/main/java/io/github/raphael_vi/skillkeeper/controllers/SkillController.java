@@ -29,8 +29,6 @@ public class SkillController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-
-
     @GetMapping
     public ResponseEntity<List<Skill>> getAllSkills(@PathVariable Integer fieldId) {
         List<Skill> skills = skillsRepository.findByFieldId(fieldId);

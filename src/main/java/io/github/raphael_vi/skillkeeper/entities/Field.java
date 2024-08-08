@@ -3,7 +3,7 @@ package io.github.raphael_vi.skillkeeper.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "genres")
+@Table(name = "fields")
 public class Field {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

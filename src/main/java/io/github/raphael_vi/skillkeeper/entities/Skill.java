@@ -10,7 +10,7 @@ public class Skill {
     private Integer id;
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "field_id", nullable = false)
     private Field field;
 
@@ -31,6 +31,7 @@ public class Skill {
     }
 
     public Field getField(){
+
         return field;
     }
 
