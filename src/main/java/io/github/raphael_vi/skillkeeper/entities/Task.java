@@ -12,7 +12,6 @@ public class Task {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
     public String getName() {
